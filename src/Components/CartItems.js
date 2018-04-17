@@ -1,12 +1,19 @@
 import React from 'react'
 import CartItemComponent from './CartItemComponent'
 
-const CartItems = ({cartItemsList}) => {
-//console.log('itemssss', items)
+const CartItems = ({cartItemsList, addItem}) => {
+
   const allItems = cartItemsList.map(item => {
-    return <CartItemComponent key={item.product.id} name={item.product.name} price={item.product.priceInCents} quantity={item.quantity}/>
+    return <CartItemComponent 
+             key={item.product.id} 
+             name={item.product.name} 
+             price={item.product.priceInCents} 
+             quantity={item.quantity} 
+             itemId={item.id} 
+             addItem={addItem}
+           />
   })
-  console.log('allItems', allItems)
+  
   return (
     <div className="container">
       <h1>Cart Items</h1>

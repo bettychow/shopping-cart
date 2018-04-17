@@ -30,15 +30,27 @@ class App extends Component {
       cartItemsList: itemsJson
     })
   }
+
+  addItem = (quantity, itemId) => {
+
+    this.setState({
+
+      cartItemsList: this.state.cartItemsList.map(cartItem => {
+        if(cartItem.id === itemId) {
+          cartItem.quantity = quantity
+        }
+        return cartItem
+      })
+    })
+  }
   
   render() {
     const copyright = <span>&copy; 2018</span>;
      
     return (
       <div className="App">
-      console.log('cartItemsList', cartItemsList)
         <CartHeader/>
-        <CartItems cartItemsList={this.state.cartItemsList}/>
+        <CartItems cartItemsList={this.state.cartItemsList} addItem={this.addItem}/>
         <CartFooter copyright={copyright}/>
       </div>
     );
