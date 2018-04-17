@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import CartHeader from './Components/CartHeader';
 import CartFooter from './Components/CartFooter';
@@ -7,49 +6,38 @@ import CartItems from './Components/CartItems';
 
 
 class App extends Component {
+
+  state = {
+    cartItemsList: []
+  }
+
+  async componentDidMount() {
+    const productsResponse = await fetch('http://localhost:8082/api/products')
+    const productsJson = await productsResponse.json()
+    const itemsResponse = await fetch('http://localhost:8082/api/items')
+    const itemsJson = await itemsResponse.json()
+
+    itemsJson.forEach(item => {
+      for(let i = 0; i < productsJson.length; i++) {
+        if(item.product_id === productsJson[i].id) {
+          item.product = productsJson[i]
+        }
+      }
+    })
+
+    this.setState({
+      cartItemsList: itemsJson
+    })
+  }
   
   render() {
     const copyright = <span>&copy; 2018</span>;
-    const cartItemsList = [
-      {
-        id: 1,
-        product: { id: 40, name: 'Mediocre Iron Watch', priceInCents: 399 },
-        quantity: 1
-      },
-      {
-        id: 2,
-        product: {
-          id: 41,
-          name: 'Heavy Duty Concrete Plate',
-          priceInCents: 499
-        },
-        quantity: 2
-      },
-      {
-        id: 3,
-        product: {
-          id: 42,
-          name: 'Intelligent Paper Knife',
-          priceInCents: 1999
-        },
-        quantity: 1
-      },
-      {
-        id: 4,
-        product: {
-          id: 43,
-          name: 'Sarcastic Glass Cup',
-          priceInCents: 1099
-        },
-        quantity: 3
-      }
-    ];
      
     return (
       <div className="App">
       console.log('cartItemsList', cartItemsList)
         <CartHeader/>
-        <CartItems cartItemsList={cartItemsList}/>
+        <CartItems cartItemsList={this.state.cartItemsList}/>
         <CartFooter copyright={copyright}/>
       </div>
     );
