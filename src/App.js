@@ -21,6 +21,7 @@ class App extends Component {
       for(let i = 0; i < productsJson.length; i++) {
         if(item.product_id === productsJson[i].id) {
           item.product = productsJson[i]
+          break;
         }
       }
     })
