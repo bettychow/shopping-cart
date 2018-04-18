@@ -16,8 +16,24 @@ class App extends Component {
     const productsJson = await productsResponse.json()
     const itemsResponse = await fetch('http://localhost:8082/api/items')
     const itemsJson = await itemsResponse.json()
+    const itemsList = itemsJson.slice(0)
+    const nonDuplicatingList = [itemsList[0]]
 
-    itemsJson.forEach(item => {
+    for(let i = 1; i < itemsList.length; i++) {
+      let productNotExist = true
+      for(let j = 0; j < nonDuplicatingList.length; j++) {
+        if(itemsList[i].product_id === nonDuplicatingList[j].product_id) {
+          nonDuplicatingList[j].quantity += itemsList[i].quantity
+          productNotExist = productNotExist && false
+        }
+      }
+
+      if(productNotExist) {
+        nonDuplicatingList.push(itemsList[i])
+      }
+    }
+
+    nonDuplicatingList.forEach(item => {
       for(let i = 0; i < productsJson.length; i++) {
         if(item.product_id === productsJson[i].id) {
           item.product = productsJson[i]
@@ -27,21 +43,38 @@ class App extends Component {
     })
 
     this.setState({
-      cartItemsList: itemsJson
+      cartItemsList: nonDuplicatingList
     })
   }
 
-  addItem = (quantity, itemId) => {
+  addItem = (quantity, productId) => {
 
     this.setState({
-
       cartItemsList: this.state.cartItemsList.map(cartItem => {
-        if(cartItem.id === itemId) {
-          cartItem.quantity = quantity
+        if(cartItem.product_id === productId) {
+          cartItem.quantity += quantity
         }
         return cartItem
       })
     })
+
+    const item = {}
+    item.productId = productId
+    item.quantity = quantity
+
+    this.createItem(item)
+  }
+
+  async createItem(item) {
+    const response = await fetch('http://localhost:8082/api/items', {
+      method: 'POST',
+      body: JSON.stringify(item),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    const newItem = await response.json()
   }
   
   render() {

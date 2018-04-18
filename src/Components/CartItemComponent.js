@@ -1,9 +1,8 @@
 import React from 'react'
 
-const CartItemComponent = ({name, price, quantity, itemId, addItem}) => {
-  const handleCllick = (quantity, itemId) => {
-    let quan = quantity + 1
-    addItem(quan, itemId)
+const CartItemComponent = ({name, price, quantity, productId, addItem}) => {
+  const handleCllick = (quantity, productId) => {
+    addItem(quantity, productId)
   }
   return (
     <div className="list-group-item">
@@ -11,7 +10,7 @@ const CartItemComponent = ({name, price, quantity, itemId, addItem}) => {
           <div className="col-md-8">{name}</div>
           <div className="col-md-2">{(price*.1).toFixed(2)}</div>
           <div className="col-md-2">{quantity}</div>
-          <button onClick={() => handleCllick(quantity, itemId)} >Add 1 Item</button>
+          <button onClick={() => handleCllick(1, productId)} >Add 1 Item</button>
       </div>
     </div>
   )

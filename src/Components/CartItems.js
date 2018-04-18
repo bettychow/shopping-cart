@@ -5,11 +5,11 @@ const CartItems = ({cartItemsList, addItem}) => {
 
   const allItems = cartItemsList.map(item => {
     return <CartItemComponent 
-             key={item.product.id} 
+             key={item.id} 
              name={item.product.name} 
+             productId={item.product_id}
              price={item.product.priceInCents} 
              quantity={item.quantity} 
-             itemId={item.id} 
              addItem={addItem}
            />
   })
